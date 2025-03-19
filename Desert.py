@@ -9,7 +9,7 @@ running = True
 
 # create a variable to store player position so we can modify it based on keyboard input
 player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
-
+enemy = (0, 300)
 def cropAlpha(surface):
     final_size = surface.get_bounding_rect()
     cropped = pygame.Surface((final_size.width, final_size.height), pygame.SRCALPHA, 32)
@@ -21,7 +21,7 @@ def prepareTraffic(sprite):
     rotated_sprite = pygame.transform.rotate(sprite, 180)
     return cropAlpha(rotated_sprite)
 
-# Load Car
+# Load Cats
 cat_sheet = pygame.image.load('Sprites/cat_white-32x32.png')
 #image from opengameart.org, search cats and click 'CATS REWORKS'
 cat1 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
@@ -42,7 +42,25 @@ cat5.blit(cat_sheet, (0,0), (32, 32, 32, 32))
 cat6 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
 cat6.blit(cat_sheet, (0,0), (64, 32, 32, 32))
 
-player = [cat1, cat2, cat3, cat4, cat5, cat6]
+cat7 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat7.blit(cat_sheet, (0,0), (0, 64, 32, 32))
+
+cat8 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat8.blit(cat_sheet, (0,0), (32, 64, 32, 32))
+
+cat9 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat9.blit(cat_sheet, (0,0), (64, 64, 32, 32))
+
+cat10 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat10.blit(cat_sheet, (0,0), (32, 96, 32, 32))
+
+cat11 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat11.blit(cat_sheet, (0,0), (64, 96, 32, 32))
+
+cat12 = pygame.Surface((32,32), pygame.SRCALPHA, 32)
+cat12.blit(cat_sheet, (0,0), (96, 96, 32, 32))
+
+player = [cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10, cat11, cat12]
 player_frame = 0
 
 #player = cropAlpha(pygame.image.load('Sprites/cat.png'))
@@ -79,6 +97,9 @@ while running:
     # Draw a rectangle
     pygame.draw.rect(screen, (234,182,118), (0, 150, 640,480))
     
+        
+    pygame.Rect( (60, 100), (80,80))
+    
     player_box = screen.blit(player[player_frame], player_pos)
     
     # Draw an ellipse
@@ -91,13 +112,20 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 10
+        player_frame = (player_frame + 1) % 3 + 3
+        
+
     if keys[pygame.K_s]:
         player_pos.y += 10
+        player_frame = (player_frame + 1) % 3 + 6
+
     if keys[pygame.K_a]:
         player_pos.x -= 10
+        player_frame = (player_frame + 1) % 3 + 9
+
     if keys[pygame.K_d]:
         player_pos.x += 10
-        player_frame = (player_frame + 1) % 6
+        player_frame = (player_frame + 1) % 3 
         
     
 

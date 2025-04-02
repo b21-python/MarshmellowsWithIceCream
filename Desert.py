@@ -9,7 +9,8 @@ running = True
 
 # create a variable to store player position so we can modify it based on keyboard input
 player_pos = pygame.Vector2(screen.get_width()/2, screen.get_height()/2)
-enemy = (0, 300)
+enemy = pygame.Vector2(0, 300)
+player_size = 34
 def cropAlpha(surface):
     final_size = surface.get_bounding_rect()
     cropped = pygame.Surface((final_size.width, final_size.height), pygame.SRCALPHA, 32)
@@ -62,7 +63,7 @@ cat12.blit(cat_sheet, (0,0), (96, 96, 32, 32))
 
 player = [cat1, cat2, cat3, cat4, cat5, cat6, cat7, cat8, cat9, cat10, cat11, cat12]
 player_frame = 0
-
+enemy_frame = 100
 #player = cropAlpha(pygame.image.load('Sprites/cat.png'))
 #print(player)
 #player = pygame.transform.scale(player, (120,100))
@@ -97,24 +98,28 @@ while running:
     # Draw a rectangle
     pygame.draw.rect(screen, (234,182,118), (0, 150, 640,480))
     
-        
     pygame.Rect( (60, 100), (80,80))
     
     player_box = screen.blit(player[player_frame], player_pos)
-    
+   
     # Draw an ellipse
-    pygame.draw.ellipse(screen, (0,200,255), (100, 250, 450, 100))
+    pygame.draw.ellipse(screen, (0,200,255), (100, 280, 450, 100))
     
-    pygame.draw.ellipse(screen, (227,241,241,255),(200, 350, 150, 100))    
-    #banana
-
+    enemy_box = pygame.draw.rect(screen, (227,241,241,255), (enemy, (50,50)))
+    
+    if player_box.colliderect(enemy_box):
+        running = False
+                
+    if player_box.colliderect(enemy_box):
+        print(player_box)
+        print(enemy_box)
+        running = False
     # update player position based on keys pressed
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         player_pos.y -= 10
         player_frame = (player_frame + 1) % 3 + 3
         
-
     if keys[pygame.K_s]:
         player_pos.y += 10
         player_frame = (player_frame + 1) % 3 + 6
@@ -127,12 +132,33 @@ while running:
         player_pos.x += 10
         player_frame = (player_frame + 1) % 3 
         
-    
-
+    if player_pos.x > enemy.x:
+        enemy.x += 1
+    if player_pos.x < enemy.x:
+        enemy.x -= 1
+    if player_pos.y > enemy.y:
+        enemy.y += 1
+    if player_pos.y < enemy.y:
+        enemy.y -= 1
+        
+    if player_pos.x <= -player_size:
+        player_pos.x = screen.get_width() - 1
+    if player_pos.x >= screen.get_width():
+        player_pos.x = -player_size + 1
+    if player_pos.y <= -player_size:
+        player_pos.y = screen.get_height() - 1
+    if player_pos.y >= screen.get_height():
+        player_pos.y = -player_size + 1
     # Render what you've drawn to the screen
     pygame.display.flip()
 
     clock.tick(60) # limit to 60 FPS
+        
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
 # Exit game when we leave the game loop
 pygame.quit()         

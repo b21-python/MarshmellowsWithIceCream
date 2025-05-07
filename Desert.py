@@ -25,6 +25,14 @@ def prepareTraffic(sprite):
     rotated_sprite = pygame.transform.rotate(sprite, 180)
     return cropAlpha(rotated_sprite)
 
+def is_point_in_ellipse(point_x, point_y, ellipse_center_x, ellipse_center_y, ellipse_radius_x, ellipse_radius_y):
+    dx = (point_x - ellipse_center_x) / ellipse_radius_x
+    dy = (point_y - ellipse_center_y) / ellipse_radius_y
+    if (dx*dx + dy*dy <= 1):
+        return True
+    else:
+        return False
+    
 player = cat()
 enemy = kitten()
 player_frame = 0
@@ -32,12 +40,19 @@ enemy_frame = 0
 #player = cropAlpha(pygame.image.load('Sprites/cat.png'))
 #print(player)
 #player = pygame.transform.scale(player, (120,100))
-
+font = pygame.font. SysFont('Ariel',42)
+game_over = False
 while running:
     # poll for events and react to user closing the window to end the game
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    #if game_over == True:
+        #fontSurface = font.render("You win!", True, [0, 225, 0])
+    #else:
+        #fontSurface = font.render("You lose!", True, [225, 0, 0])
+    #screen.blit(fontSurface, [300, 200])
+    #pygame.display.flip()
 
     # Set screen color
     screen.fill("cyan")
@@ -102,19 +117,23 @@ while running:
    
     # Draw an ellipse
     lake = pygame.Surface((480,180), pygame.SRCALPHA)
-    pygame.draw.ellipse(lake, (0,200,255, 170), (0, 20, 450, 100))
-    screen.blit(lake, (110, 230))
+    lake_width = 450
+    lake_height = 100
+    pygame.draw.ellipse(lake, (0,200,255, 170), (0, 20, lake_width, lake_height))
+    
+    lake_offset_pos_x = 110
+    lake_offset_pos_y = 230
+    lake_box = screen.blit(lake, (lake_offset_pos_x, lake_offset_pos_y))
     
     #enemy_box = pygame.draw.rect(screen, (227,241,241,255), (enemy, (50,50)))
     
-    #if player_box.colliderect(enemy_box):
+    if player_box.colliderect(enemy_box):
+        running = False
+        game_over = True        
+   
+#     if enemy_box.colliderect(lake_box):
         #running = False
-                
-    #if player_box.colliderect(enemy_box):
-        #print(player_box)
-        #print(enemy_box)
-        #running = False
-    
+        
     # update player position based on keys pressed
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
@@ -154,12 +173,19 @@ while running:
     pygame.display.flip()
 
     clock.tick(60) # limit to 60 FPS
-        
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
+    
+#font = pygame.font. SysFont('Ariel',42)
+#game_over = False
+#running = True
+#while running:
+    #for event in pygame.event.get():
+        #if event.type == pygame.QUIT:
+            #running = False
+if game_over == True:
+    fontSurface = font.render("You lose!", True, [0, 225, 0])
+    screen.blit(fontSurface, [300, 200])
+    pygame.display.flip()
+else:
+    pygame.quit()  
 # Exit game when we leave the game loop
-pygame.quit()         
+#pygame.quit()         

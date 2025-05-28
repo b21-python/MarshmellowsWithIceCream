@@ -65,7 +65,7 @@ while True:
         # Set screen color
         screen.fill("cyan")
         
-        clouds(screen)
+        clouds(screen, 3.2)
         # Draw a rectangle
         pygame.draw.rect(screen, (234,182,118), (0, 150, 640,480))
         
